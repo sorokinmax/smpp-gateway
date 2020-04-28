@@ -1,0 +1,10 @@
+smpp:
+  host: "192.168.255.251"
+  port: 2775
+
+smtp:
+  host: "mail.boardmaps.com"
+  user: "sender@example.com"
+  password: "pass"
+  from: "sender@example.com"
+  to: "reciever@example.com"
