@@ -16,3 +16,4 @@ config.yml
 # vendor/
 __debug_bin
 *.log
+*.7z
