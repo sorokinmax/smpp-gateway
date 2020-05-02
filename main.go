@@ -17,7 +17,7 @@ var (
 	systemID   string
 	msgID      int
 )
-var version = "v.1.2.0"
+var version = "v.1.2.1"
 
 var cfg Config
 
@@ -46,6 +46,7 @@ func main() {
 				if err != nil {
 					fail("Invalid PDU in context error: %+v", err)
 				}
+				log.Println(fmt.Sprintf("Incoming connection from %s, with ID: %s\n", ctx.RemoteAddr(), btrx.SystemID))
 				resp := btrx.Response(systemID)
 				if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
 					fail("Server can't respond to the Binding request: %+v", err)
@@ -61,7 +62,7 @@ func main() {
 							From: ` + sm.SourceAddr + `<br>
 							To: ` + sm.DestinationAddr + `<br>
 							Priority: ` + strconv.Itoa(sm.PriorityFlag) + `<br>
-							RemoteIP: ` + ctx.RemoteAddr() + `<br>
+							RemoteAddress: ` + ctx.RemoteAddr() + `<br><br>
 							SMS: ` + UCS2Decode(sm.ShortMessage) + `<br><br><br><hr>
 							SMPP Gateway ` + version + `<br>
 							Author: <a href="https://github.com/sorokinmax" target="_blank">Maxim Sorokin</a>
