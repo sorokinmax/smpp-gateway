@@ -2,6 +2,8 @@
 ## Description
 SMPP clients test tool.
 
+Runs SMPP server, forwards incoming SMS with some debug information to SMTP.
+
 Based on [SMPP 3.4 Library](https://github.com/ajankovic/smpp "SMPP 3.4 Library") 
 
 
