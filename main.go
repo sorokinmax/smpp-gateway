@@ -71,7 +71,7 @@ func main() {
 					</body>
 				</html>
 				`
-				log.Println(fmt.Fprintf(os.Stdout, "MSG: %s\n", msg))
+				log.Println(fmt.Sprintf("MSG: %s\n", msg))
 				SMTPSend("SMPP gateway", msg)
 
 				msgID++
@@ -94,15 +94,15 @@ func main() {
 	}
 	srv := smpp.NewServer(serverAddr, sessConf)
 
-	log.Println(fmt.Fprintf(os.Stderr, "'%s' is listening on '%s'\n", systemID, serverAddr))
+	log.Println(fmt.Sprintf("'%s' is listening on '%s'\n", systemID, serverAddr))
 	err = srv.ListenAndServe()
 	if err != nil {
 		fail("Serving exited with error: %+v", err)
 	}
-	log.Println(fmt.Fprintf(os.Stderr, "Server closed\n"))
+	log.Println(fmt.Sprintf("Server closed\n"))
 }
 
 func fail(msg string, params ...interface{}) {
-	log.Println(fmt.Fprintf(os.Stderr, msg+"\n", params...))
+	log.Println(fmt.Sprintf(msg+"\n", params...))
 	os.Exit(1)
 }

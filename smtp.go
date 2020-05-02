@@ -11,6 +11,7 @@ import (
 	"strconv"
 )
 
+// SMTPSend - send email
 func SMTPSend(subject string, body string) {
 
 	from := mail.Address{Name: "SMPP gateway", Address: cfg.SMTP.From}
@@ -47,26 +48,26 @@ func SMTPSend(subject string, body string) {
 	}
 
 	if err = c.StartTLS(tlsconfig); err != nil {
-		log.Println(fmt.Printf("Error performing StartTLS: %s\n", err))
+		log.Println(fmt.Sprintf("Error performing StartTLS: %s\n", err))
 		return
 	}
 
 	if err = c.Auth(LoginAuth(cfg.SMTP.User, cfg.SMTP.Password)); err != nil {
-		log.Println("c.Auth Error: ", err)
+		log.Println("SMTP auth Error: ", err)
 		return
 	}
 
 	if err = c.Mail(from.Address); err != nil {
-		log.Println("c.Mail Error: ", err)
+		log.Println("SMTP mail Error: ", err)
 	}
 
 	if err = c.Rcpt(to.Address); err != nil {
-		log.Println("c.Rcpt Error: ", err)
+		log.Println("SMTP rcpt Error: ", err)
 	}
 
 	w, err := c.Data()
 	if err != nil {
-		log.Println("c.Data Error: ", err)
+		log.Println("SMTP data Error: ", err)
 	}
 
 	_, err = w.Write([]byte(message))
@@ -76,7 +77,7 @@ func SMTPSend(subject string, body string) {
 
 	err = w.Close()
 	if err != nil {
-		log.Println("reader Error: ", err)
+		log.Println("SMTP error: ", err)
 	}
 
 	c.Quit()
