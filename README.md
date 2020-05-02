@@ -4,7 +4,7 @@
 
 ## Description
 
-SMPP clients test tool.
+SMPP clients testing tool.
 
 Runs SMPP server, forwards incoming SMS with some debug information to SMTP.
 
