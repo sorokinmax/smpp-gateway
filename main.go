@@ -17,7 +17,7 @@ var (
 	systemID   string
 	msgID      int
 )
-var version = "v.1.0.0"
+var version = "v.1.0.1"
 
 var cfg Config
 
@@ -35,7 +35,7 @@ func main() {
 
 	serverHost := cfg.SMPP.Host + ":" + strconv.Itoa(cfg.SMPP.Port)
 	flag.StringVar(&serverAddr, "addr", serverHost, "server will listen on this address.")
-	flag.StringVar(&systemID, "systemid", "Sorokin's SMS Gateway", "descriptive server identification.")
+	flag.StringVar(&systemID, "systemid", "SMS Gateway", "descriptive server identification.")
 	flag.Parse()
 
 	sessConf := smpp.SessionConf{
@@ -67,7 +67,7 @@ func main() {
 						Priority: ` + strconv.Itoa(sm.PriorityFlag) + `<br>
 						SMS: ` + UCS2Decode(sm.ShortMessage) + `<br><br><br><hr>
 						SMPP Gateway ` + version + `<br>
-						<i>Пупсик, если тебе что-то не нравится - пиши:</i> <a href="https://github.com/sorokinmax" target="_blank">Maxim Sorokin</a>
+						<i>Author:</i> <a href="https://github.com/sorokinmax" target="_blank">Maxim Sorokin</a>
 					</body>
 				</html>
 				`
