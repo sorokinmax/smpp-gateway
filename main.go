@@ -56,12 +56,12 @@ func main() {
 				if err != nil {
 					fail("Invalid PDU in context error: %+v", err)
 				}
-
 				msg := `
 						<body>
 							From: ` + sm.SourceAddr + `<br>
 							To: ` + sm.DestinationAddr + `<br>
 							Priority: ` + strconv.Itoa(sm.PriorityFlag) + `<br>
+							RemoteIP: ` + ctx.RemoteAddr() + `<br>
 							SMS: ` + UCS2Decode(sm.ShortMessage) + `<br><br><br><hr>
 							SMPP Gateway ` + version + `<br>
 							Author: <a href="https://github.com/sorokinmax" target="_blank">Maxim Sorokin</a>
