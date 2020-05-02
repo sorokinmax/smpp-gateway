@@ -16,11 +16,12 @@ type Config struct {
 	} `yaml:"smpp"`
 
 	SMTP struct {
-		Host     string `yaml:"host"`
-		User     string `yaml:"user"`
-		Password string `yaml:"password"`
-		From     string `yaml:"from"`
-		To       string `yaml:"to"`
+		Host string   `yaml:"host"`
+		Port int      `yaml:"port"`
+		User string   `yaml:"user"`
+		Pass string   `yaml:"pass"`
+		From string   `yaml:"from"`
+		To   []string `yaml:"to"`
 	} `yaml:"smtp"`
 }
 

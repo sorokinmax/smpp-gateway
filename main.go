@@ -17,7 +17,7 @@ var (
 	systemID   string
 	msgID      int
 )
-var version = "v.1.0.1"
+var version = "v.1.2.0"
 
 var cfg Config
 
@@ -56,23 +56,21 @@ func main() {
 				if err != nil {
 					fail("Invalid PDU in context error: %+v", err)
 				}
+
 				msg := `
-				<html>
-					<head>
-						<meta http-equiv="Content-Type" content="text/html; charset=\"utf-8\"">
-					</head>
-					<body>
-						From: ` + sm.SourceAddr + `<br>
-						To: ` + sm.DestinationAddr + `<br>
-						Priority: ` + strconv.Itoa(sm.PriorityFlag) + `<br>
-						SMS: ` + UCS2Decode(sm.ShortMessage) + `<br><br><br><hr>
-						SMPP Gateway ` + version + `<br>
-						<i>Author:</i> <a href="https://github.com/sorokinmax" target="_blank">Maxim Sorokin</a>
-					</body>
-				</html>
+						<body>
+							From: ` + sm.SourceAddr + `<br>
+							To: ` + sm.DestinationAddr + `<br>
+							Priority: ` + strconv.Itoa(sm.PriorityFlag) + `<br>
+							SMS: ` + UCS2Decode(sm.ShortMessage) + `<br><br><br><hr>
+							SMPP Gateway ` + version + `<br>
+							Author: <a href="https://github.com/sorokinmax" target="_blank">Maxim Sorokin</a>
+						</body>
 				`
-				log.Println(fmt.Sprintf("MSG: %s\n", msg))
-				SMTPSend("SMPP gateway", msg)
+
+				log.Println(fmt.Sprintf("Incoming SMS: %s\n", msg))
+
+				SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cfg.SMTP.To, "SMPP gateway", msg, "")
 
 				msgID++
 				resp := sm.Response(fmt.Sprintf("msgID_%d", msgID))
@@ -104,5 +102,5 @@ func main() {
 
 func fail(msg string, params ...interface{}) {
 	log.Println(fmt.Sprintf(msg+"\n", params...))
-	os.Exit(1)
+	//os.Exit(1)
 }
