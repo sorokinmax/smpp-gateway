@@ -46,7 +46,7 @@ func main() {
 				if err != nil {
 					fail("Invalid PDU in context error: %+v", err)
 				}
-				log.Println(fmt.Sprintf("Incoming connection from %s, with ID: %s\n", ctx.RemoteAddr(), btrx.SystemID))
+				log.Println(fmt.Sprintf("Incoming connection from %s with ID: %s\n", ctx.RemoteAddr(), btrx.SystemID))
 				resp := btrx.Response(systemID)
 				if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
 					fail("Server can't respond to the Binding request: %+v", err)
