@@ -17,7 +17,7 @@ var (
 	systemID   string
 	msgID      int
 )
-var version = "v1.2.1"
+var version = "v1.3.0"
 
 var cfg Config
 
@@ -44,18 +44,18 @@ func main() {
 			case pdu.BindTransceiverID:
 				btrx, err := ctx.BindTRx()
 				if err != nil {
-					fail("Invalid PDU in context error: %+v", err)
+					Logger("Invalid PDU in context error: %+v", err)
 				}
-				log.Println(fmt.Sprintf("Incoming connection from %s with ID: %s\n", ctx.RemoteAddr(), btrx.SystemID))
+				Logger("Incoming connection from %s with ID: %s", ctx.RemoteAddr(), btrx.SystemID)
 				resp := btrx.Response(systemID)
 				if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
-					fail("Server can't respond to the Binding request: %+v", err)
+					Logger("Server can't respond to the Binding request: %+v", err)
 				}
 
 			case pdu.SubmitSmID:
 				sm, err := ctx.SubmitSm()
 				if err != nil {
-					fail("Invalid PDU in context error: %+v", err)
+					Logger("Invalid PDU in context error: %+v", err)
 				}
 				msg := `
 						<body>
@@ -69,23 +69,23 @@ func main() {
 						</body>
 				`
 
-				log.Println(fmt.Sprintf("Incoming SMS\n\tFrom: %s\n\tTo:%s\n\tPriority: %s\n\tRemoteAddress: %s\n\tSMS: %s", sm.SourceAddr, sm.DestinationAddr, strconv.Itoa(sm.PriorityFlag), ctx.RemoteAddr(), UCS2Decode(sm.ShortMessage)))
+				Logger("Incoming SMS\n\tFrom: %s\n\tTo:%s\n\tPriority: %s\n\tRemoteAddress: %s\n\tSMS: %s", sm.SourceAddr, sm.DestinationAddr, strconv.Itoa(sm.PriorityFlag), ctx.RemoteAddr(), UCS2Decode(sm.ShortMessage))
 
 				SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.Auth, cfg.SMTP.Encr, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cfg.SMTP.To, "SMPP gateway", msg, "")
 
 				msgID++
 				resp := sm.Response(fmt.Sprintf("msgID_%d", msgID))
 				if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
-					fail("Server can't respond to the submit_sm request: %+v", err)
+					Logger("Server can't respond to the submit_sm request: %+v", err)
 				}
 			case pdu.UnbindID:
 				unb, err := ctx.Unbind()
 				if err != nil {
-					fail("Invalid PDU in context error: %+v", err)
+					Logger("Invalid PDU in context error: %+v", err)
 				}
 				resp := unb.Response()
 				if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
-					fail("Server can't respond to the submit_sm request: %+v", err)
+					Logger("Server can't respond to the submit_sm request: %+v", err)
 				}
 				ctx.CloseSession()
 			}
@@ -93,14 +93,15 @@ func main() {
 	}
 	srv := smpp.NewServer(serverAddr, sessConf)
 
-	log.Println(fmt.Sprintf("'%s' is listening on '%s'\n", systemID, serverAddr))
+	Logger("'%s' is listening on '%s'", systemID, serverAddr)
 	err = srv.ListenAndServe()
 	if err != nil {
-		fail("Serving exited with error: %+v", err)
+		Logger("Serving exited with error: %+v", err)
 	}
-	log.Println(fmt.Sprintf("Server closed\n"))
+	Logger("Server closed")
 }
 
-func fail(msg string, params ...interface{}) {
-	log.Println(fmt.Sprintf(msg+"\n", params...))
+// Logger - logging wrapper
+func Logger(msg string, params ...interface{}) {
+	log.Println(fmt.Sprintf(msg, params...))
 }

@@ -3,8 +3,8 @@ smpp:
   port: 2775
 
 smtp:
-  host: "mail.example.com"
-  port: 25
+  host: "smtp.office365.com"
+  port: 587
   auth: 2 # Authentication type: 1 = AuthPlain, 2 = AuthLogin, 3 = AuthCRAMMD5
   encr: 3 # Encryption type: 1 = EncryptionNone, 2 = EncryptionSSL, 3 = EncryptionTLS
   user: "sender@example.com"
