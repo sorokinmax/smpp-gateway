@@ -71,7 +71,7 @@ func main() {
 
 				log.Println(fmt.Sprintf("Incoming SMS\n\tFrom: %s\n\tTo:%s\n\tPriority: %s\n\tRemoteAddress: %s\n\tSMS: %s", sm.SourceAddr, sm.DestinationAddr, strconv.Itoa(sm.PriorityFlag), ctx.RemoteAddr(), UCS2Decode(sm.ShortMessage)))
 
-				SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cfg.SMTP.To, "SMPP gateway", msg, "")
+				SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.Auth, cfg.SMTP.Encr, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cfg.SMTP.To, "SMPP gateway", msg, "")
 
 				msgID++
 				resp := sm.Response(fmt.Sprintf("msgID_%d", msgID))
@@ -103,5 +103,4 @@ func main() {
 
 func fail(msg string, params ...interface{}) {
 	log.Println(fmt.Sprintf(msg+"\n", params...))
-	//os.Exit(1)
 }

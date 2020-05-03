@@ -7,7 +7,9 @@ import (
 )
 
 // SendMail - send email
-func SendMail(host string, port int, user string, password string, from string, to []string, subject string, body string, attach string) {
+//Authentication type: 1 = AuthPlain, 2 = AuthLogin, 3 = AuthCRAMMD5
+//Encryption type: 1 = EncryptionNone, 2 = EncryptionSSL, 3 = EncryptionTLS
+func SendMail(host string, port int, authenticationType int, encryptionType int, user string, password string, from string, to []string, subject string, body string, attach string) {
 
 	server := mail.NewSMTPClient()
 
@@ -15,11 +17,27 @@ func SendMail(host string, port int, user string, password string, from string, 
 	server.Port = port
 	server.Username = user
 	server.Password = password
-	server.Authentication = mail.AuthLogin
-	server.Encryption = mail.EncryptionTLS
 	server.KeepAlive = false
-	smtpClient, err := server.Connect()
 
+	switch authenticationType {
+	case 1:
+		server.Authentication = mail.AuthPlain
+	case 2:
+		server.Authentication = mail.AuthLogin
+	case 3:
+		server.Authentication = mail.AuthCRAMMD5
+	}
+
+	switch encryptionType {
+	case 1:
+		server.Encryption = mail.EncryptionNone
+	case 2:
+		server.Encryption = mail.EncryptionSSL
+	case 3:
+		server.Encryption = mail.EncryptionTLS
+	}
+
+	smtpClient, err := server.Connect()
 	if err != nil {
 		log.Fatal(err)
 	}

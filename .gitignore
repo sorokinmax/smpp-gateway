@@ -17,3 +17,4 @@ config.yml
 __debug_bin
 *.log
 *.7z
+*.zip
