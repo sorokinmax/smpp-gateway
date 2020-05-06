@@ -38,8 +38,11 @@ func main() {
 	flag.StringVar(&systemID, "systemid", "SMS Gateway", "descriptive server identification.")
 	flag.Parse()
 
+	go CacheAutoUpdater("mapping.txt")
+
 	sessConf := smpp.SessionConf{
 		Handler: smpp.HandlerFunc(func(ctx *smpp.Context) {
+
 			switch ctx.CommandID() {
 			case pdu.BindTransceiverID:
 				btrx, err := ctx.BindTRx()
@@ -71,7 +74,10 @@ func main() {
 
 				Logger("Incoming SMS\n\tFrom: %s\n\tTo:%s\n\tPriority: %s\n\tRemoteAddress: %s\n\tSMS: %s", sm.SourceAddr, sm.DestinationAddr, strconv.Itoa(sm.PriorityFlag), ctx.RemoteAddr(), UCS2Decode(sm.ShortMessage))
 
-				SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.Auth, cfg.SMTP.Encr, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cfg.SMTP.To, "SMPP gateway", msg, "")
+				if len(cache.TelMail[sm.DestinationAddr]) > 0 {
+					Logger("Send email to: %s", cache.TelMail[sm.DestinationAddr])
+					SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.Auth, cfg.SMTP.Encr, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cache.TelMail[sm.DestinationAddr], "SMPP gateway", msg, "")
+				}
 
 				msgID++
 				resp := sm.Response(fmt.Sprintf("msgID_%d", msgID))
