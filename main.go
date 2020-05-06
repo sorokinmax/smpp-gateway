@@ -17,7 +17,7 @@ var (
 	systemID   string
 	msgID      int
 )
-var version = "v1.3.0"
+var version = "v1.4.0"
 
 var cfg Config
 
