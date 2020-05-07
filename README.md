@@ -8,6 +8,8 @@ SMPP clients testing tool.
 
 Runs SMPP server, forwards incoming SMS with some debug information to SMTP.
 
+Incoming SMS are redirected to emails, mapped with phone numbers in mapping.txt
+
 Based on [SMPP 3.4 Library](https://github.com/ajankovic/smpp "SMPP 3.4 Library") 
 
 
