@@ -18,3 +18,4 @@ __debug_bin
 *.log
 *.7z
 *.zip
+.vscode/launch.json
