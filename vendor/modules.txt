@@ -1,0 +1,23 @@
+# github.com/ajankovic/smpp v0.0.0-20191203230920-1db50388714e
+## explicit; go 1.13
+github.com/ajankovic/smpp
+github.com/ajankovic/smpp/pdu
+github.com/ajankovic/smpp/time
+# github.com/kelseyhightower/envconfig v1.4.0
+## explicit
+github.com/kelseyhightower/envconfig
+# github.com/xhit/go-simple-mail v2.2.2+incompatible
+## explicit
+github.com/xhit/go-simple-mail
+# golang.org/x/text v0.3.7
+## explicit; go 1.17
+golang.org/x/text/encoding
+golang.org/x/text/encoding/internal
+golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/encoding/unicode
+golang.org/x/text/internal/utf8internal
+golang.org/x/text/runes
+golang.org/x/text/transform
+# gopkg.in/yaml.v2 v2.4.0
+## explicit; go 1.15
+gopkg.in/yaml.v2

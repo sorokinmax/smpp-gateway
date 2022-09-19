@@ -17,7 +17,7 @@ var (
 	systemID   string
 	msgID      int
 )
-var version = "v1.4.1"
+var version = "v1.4.2"
 
 var cfg Config
 
@@ -76,7 +76,7 @@ func main() {
 
 				if len(cache.TelMail[sm.DestinationAddr]) > 0 {
 					Logger("Send email to: %s", cache.TelMail[sm.DestinationAddr])
-					err = SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.Auth, cfg.SMTP.Encr, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cache.TelMail[sm.DestinationAddr], "SMPP gateway", msg, "")
+					err = SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.Encr, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cache.TelMail[sm.DestinationAddr], "SMPP gateway", msg, "")
 					if err != nil {
 						Logger("msgID_%d: email not sent.", msgID)
 						resp := sm.Response(fmt.Sprintf("msgID_%d: email not sent. /n %s", msgID, err.Error()))

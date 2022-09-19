@@ -1,0 +1,19 @@
+sudo: false
+
+language: go
+
+env:
+  - GO111MODULE=on
+
+go:
+  - 1.13.x
+
+git:
+  # Only clone the most recent commit.
+  depth: 1
+
+notifications:
+  email: true
+
+script:
+  - make

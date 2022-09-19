@@ -12,11 +12,11 @@ import (
 // ReadFileLines reads file by line
 func ReadFileLines(path string) (lines []string, err error) {
 	file, err := os.Open(path)
-	defer file.Close()
 
 	if err != nil {
 		return nil, err
 	}
+	defer file.Close()
 
 	// Start reading from the file with a reader.
 	reader := bufio.NewReader(file)
