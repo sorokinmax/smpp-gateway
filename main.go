@@ -17,7 +17,7 @@ var (
 	systemID   string
 	msgID      int
 )
-var version = "v1.4.0"
+var version = "v1.4.1"
 
 var cfg Config
 
@@ -76,14 +76,28 @@ func main() {
 
 				if len(cache.TelMail[sm.DestinationAddr]) > 0 {
 					Logger("Send email to: %s", cache.TelMail[sm.DestinationAddr])
-					SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.Auth, cfg.SMTP.Encr, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cache.TelMail[sm.DestinationAddr], "SMPP gateway", msg, "")
+					err = SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.Auth, cfg.SMTP.Encr, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cache.TelMail[sm.DestinationAddr], "SMPP gateway", msg, "")
+					if err != nil {
+						Logger("msgID_%d: email not sent.", msgID)
+						resp := sm.Response(fmt.Sprintf("msgID_%d: email not sent. /n %s", msgID, err.Error()))
+						if err := ctx.Respond(resp, pdu.StatusUnknownErr); err != nil {
+							Logger("Server can't respond to the submit_sm request: %+v", err)
+						}
+					}
+				} else {
+					Logger("msgID_%d: address not matched.", msgID)
+					resp := sm.Response(fmt.Sprintf("msgID_%d: address not matched.", msgID))
+					if err := ctx.Respond(resp, pdu.StatusUnknownErr); err != nil {
+						Logger("Server can't respond to the submit_sm request: %+v", err)
+					}
 				}
 
-				msgID++
 				resp := sm.Response(fmt.Sprintf("msgID_%d", msgID))
 				if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
 					Logger("Server can't respond to the submit_sm request: %+v", err)
 				}
+				msgID++
+
 			case pdu.UnbindID:
 				unb, err := ctx.Unbind()
 				if err != nil {

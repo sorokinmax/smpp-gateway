@@ -9,7 +9,7 @@ import (
 // SendMails - send emails
 //Authentication type: 1 = AuthPlain, 2 = AuthLogin, 3 = AuthCRAMMD5
 //Encryption type: 1 = EncryptionNone, 2 = EncryptionSSL, 3 = EncryptionTLS
-func SendMails(host string, port int, authenticationType int, encryptionType int, user string, password string, from string, to []string, subject string, body string, attach string) {
+func SendMails(host string, port int, authenticationType int, encryptionType int, user string, password string, from string, to []string, subject string, body string, attach string) (err error) {
 
 	server := mail.NewSMTPClient()
 
@@ -39,7 +39,8 @@ func SendMails(host string, port int, authenticationType int, encryptionType int
 
 	smtpClient, err := server.Connect()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return err
 	}
 
 	email := mail.NewMSG()
@@ -53,18 +54,19 @@ func SendMails(host string, port int, authenticationType int, encryptionType int
 	}
 
 	err = email.Send(smtpClient)
-
 	if err != nil {
 		log.Println(err)
-	} else {
-		log.Println("Email Sent")
+		return err
 	}
+
+	log.Println("Email Sent")
+	return nil
 }
 
 // SendMail - send email
 //Authentication type: 1 = AuthPlain, 2 = AuthLogin, 3 = AuthCRAMMD5
 //Encryption type: 1 = EncryptionNone, 2 = EncryptionSSL, 3 = EncryptionTLS
-func SendMail(host string, port int, authenticationType int, encryptionType int, user string, password string, from string, to string, subject string, body string, attach string) {
+func SendMail(host string, port int, authenticationType int, encryptionType int, user string, password string, from string, to string, subject string, body string, attach string) (err error) {
 
 	server := mail.NewSMTPClient()
 
@@ -95,6 +97,7 @@ func SendMail(host string, port int, authenticationType int, encryptionType int,
 	smtpClient, err := server.Connect()
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
 
 	email := mail.NewMSG()
@@ -105,10 +108,11 @@ func SendMail(host string, port int, authenticationType int, encryptionType int,
 	email.SetBody(mail.TextHTML, body)
 
 	err = email.Send(smtpClient)
-
 	if err != nil {
 		log.Println(err)
-	} else {
-		log.Println("Email Sent")
+		return err
 	}
+
+	log.Println("Email Sent")
+	return nil
 }
