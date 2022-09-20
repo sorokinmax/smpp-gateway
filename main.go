@@ -17,7 +17,7 @@ var (
 	systemID   string
 	msgID      int
 )
-var version = "v1.4.2"
+var version = "v1.4.3"
 
 var cfg Config
 
@@ -80,14 +80,14 @@ func main() {
 					if err != nil {
 						Logger("msgID_%d: email not sent.", msgID)
 						resp := sm.Response(fmt.Sprintf("msgID_%d: email not sent. /n %s", msgID, err.Error()))
-						if err := ctx.Respond(resp, pdu.StatusUnknownErr); err != nil {
+						if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
 							Logger("Server can't respond to the submit_sm request: %+v", err)
 						}
 					}
 				} else {
 					Logger("msgID_%d: address not matched.", msgID)
 					resp := sm.Response(fmt.Sprintf("msgID_%d: address not matched.", msgID))
-					if err := ctx.Respond(resp, pdu.StatusUnknownErr); err != nil {
+					if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
 						Logger("Server can't respond to the submit_sm request: %+v", err)
 					}
 				}
