@@ -13,7 +13,7 @@ type Cache struct {
 	mux     sync.Mutex
 }
 
-var cache = Cache{Mapping: make(map[string]string)}
+var cache = Cache{}
 
 func (c *Cache) Update(filePath string) {
 	content := ReadFile(filePath)
@@ -21,6 +21,7 @@ func (c *Cache) Update(filePath string) {
 	lines := strings.Split(strings.Replace(content, "\r\n", "\n", -1), "\n")
 
 	c.mux.Lock()
+	c.Mapping = make(map[string]string)
 	for _, e := range lines {
 		parts := strings.Split(e, "=")
 		if (len(parts) == 2) && (parts[0] != "") && (parts[1] != "") { //TODO ADD TRUE VALIDATION
@@ -52,6 +53,6 @@ func CacheAutoUpdater(filePath string) error {
 			go cache.Update(filePath)
 			initialStat = stat
 		}
-		time.Sleep(1 * time.Second)
+		time.Sleep(3 * time.Second)
 	}
 }
