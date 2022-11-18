@@ -9,14 +9,14 @@ import (
 )
 
 type Cache struct {
-	TelMail map[string]string
+	Mapping map[string]string
 	mux     sync.Mutex
 }
 
-var cache = Cache{TelMail: make(map[string]string)}
+var cache = Cache{Mapping: make(map[string]string)}
 
-func (c *Cache) Update() {
-	content := ReadFile("mapping.txt")
+func (c *Cache) Update(filePath string) {
+	content := ReadFile(filePath)
 
 	lines := strings.Split(strings.Replace(content, "\r\n", "\n", -1), "\n")
 
@@ -24,7 +24,7 @@ func (c *Cache) Update() {
 	for _, e := range lines {
 		parts := strings.Split(e, "=")
 		if (len(parts) == 2) && (parts[0] != "") && (parts[1] != "") { //TODO ADD TRUE VALIDATION
-			c.TelMail[parts[0]] = parts[1]
+			c.Mapping[parts[0]] = parts[1]
 		} else {
 			log.Println("File structure mapping.txt is incorrect")
 		}
@@ -36,7 +36,7 @@ func (c *Cache) Update() {
 // CacheAutoUpdater - Update cache
 func CacheAutoUpdater(filePath string) error {
 
-	go cache.Update()
+	go cache.Update(filePath)
 
 	initialStat, err := os.Stat(filePath)
 	if err != nil {
@@ -49,7 +49,7 @@ func CacheAutoUpdater(filePath string) error {
 		}
 
 		if stat.Size() != initialStat.Size() || stat.ModTime() != initialStat.ModTime() {
-			go cache.Update()
+			go cache.Update(filePath)
 			initialStat = stat
 		}
 		time.Sleep(1 * time.Second)

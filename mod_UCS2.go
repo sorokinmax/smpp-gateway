@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"golang.org/x/text/encoding/unicode"
@@ -72,7 +71,7 @@ func (s UCS2) Decode() []byte {
 func UCS2Decode(text string) string {
 	s := UCS2([]byte(text))
 	if s.Type() != 0x08 {
-		log.Println(fmt.Sprintf("Unexpected data type; want 0x08, have %d \n", s.Type()))
+		log.Printf("Unexpected data type; want 0x08, have %d \n", s.Type())
 	}
 	return string(s.Decode())
 }

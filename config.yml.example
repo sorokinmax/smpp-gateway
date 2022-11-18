@@ -9,3 +9,6 @@ smtp:
   user: "sender@example.com"
   pass: "pass"
   from: "sender@example.com"
+
+telegram:
+  botToken: "%TOKEN%"

@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/kelseyhightower/envconfig"
 	"gopkg.in/yaml.v2"
 )
 
@@ -23,23 +22,20 @@ type Config struct {
 		Pass string `yaml:"pass"`
 		From string `yaml:"from"`
 	} `yaml:"smtp"`
+
+	Telegram struct {
+		BotToken string `yaml:"botToken"`
+	} `yaml:"telegram"`
 }
 
 func readConfigFile(cfg *Config) {
-	f, err := os.Open("config.yml")
+	f, err := os.Open("./config.yml")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	decoder := yaml.NewDecoder(f)
 	err = decoder.Decode(cfg)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func readConfigEnv(cfg *Config) {
-	err := envconfig.Process("", cfg)
 	if err != nil {
 		log.Fatal(err)
 	}

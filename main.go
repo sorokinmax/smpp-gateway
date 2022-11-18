@@ -17,7 +17,7 @@ var (
 	systemID   string
 	msgID      int
 )
-var version = "v1.4.3"
+var version = "v1.5.0"
 
 var cfg Config
 
@@ -38,7 +38,7 @@ func main() {
 	flag.StringVar(&systemID, "systemid", "SMS Gateway", "descriptive server identification.")
 	flag.Parse()
 
-	go CacheAutoUpdater("mapping.txt")
+	go CacheAutoUpdater("./mapping.txt")
 
 	sessConf := smpp.SessionConf{
 		Handler: smpp.HandlerFunc(func(ctx *smpp.Context) {
@@ -60,37 +60,8 @@ func main() {
 				if err != nil {
 					Logger("Invalid PDU in context error: %+v", err)
 				}
-				msg := `
-						<body>
-							From: ` + sm.SourceAddr + `<br>
-							To: ` + sm.DestinationAddr + `<br>
-							Priority: ` + strconv.Itoa(sm.PriorityFlag) + `<br>
-							RemoteAddress: ` + ctx.RemoteAddr() + `<br><br>
-							SMS: ` + UCS2Decode(sm.ShortMessage) + `<br><br><br><hr>
-							SMPP Gateway ` + version + `<br>
-							Author: <a href="https://github.com/sorokinmax" target="_blank">Maxim Sorokin</a>
-						</body>
-				`
 
-				Logger("Incoming SMS\n\tFrom: %s\n\tTo:%s\n\tPriority: %s\n\tRemoteAddress: %s\n\tSMS: %s", sm.SourceAddr, sm.DestinationAddr, strconv.Itoa(sm.PriorityFlag), ctx.RemoteAddr(), UCS2Decode(sm.ShortMessage))
-
-				if len(cache.TelMail[sm.DestinationAddr]) > 0 {
-					Logger("Send email to: %s", cache.TelMail[sm.DestinationAddr])
-					err = SendMail(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.Encr, cfg.SMTP.User, cfg.SMTP.Pass, cfg.SMTP.From, cache.TelMail[sm.DestinationAddr], "SMPP gateway", msg, "")
-					if err != nil {
-						Logger("msgID_%d: email not sent.", msgID)
-						resp := sm.Response(fmt.Sprintf("msgID_%d: email not sent. /n %s", msgID, err.Error()))
-						if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
-							Logger("Server can't respond to the submit_sm request: %+v", err)
-						}
-					}
-				} else {
-					Logger("msgID_%d: address not matched.", msgID)
-					resp := sm.Response(fmt.Sprintf("msgID_%d: address not matched.", msgID))
-					if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
-						Logger("Server can't respond to the submit_sm request: %+v", err)
-					}
-				}
+				SendSMS(sm, ctx)
 
 				resp := sm.Response(fmt.Sprintf("msgID_%d", msgID))
 				if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
@@ -123,5 +94,5 @@ func main() {
 
 // Logger - logging wrapper
 func Logger(msg string, params ...interface{}) {
-	log.Println(fmt.Sprintf(msg, params...))
+	log.Printf(msg, params...)
 }
