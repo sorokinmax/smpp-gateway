@@ -5,7 +5,7 @@
 
 SMPP clients testing tool.
 
-Runs SMPP server, forwards incoming SMS with some debug information to SMTP.
+Runs SMPP server, forwards incoming SMS with some debug information to SMTP or Telegram.
 
 Incoming SMS are redirected to emails or Telegram, mapped with phone numbers in mapping.txt
 
