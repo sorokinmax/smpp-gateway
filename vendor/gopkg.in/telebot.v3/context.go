@@ -46,11 +46,14 @@ type Context interface {
 	// ChatMember returns chat member changes.
 	ChatMember() *ChatMemberUpdate
 
-	// ChatJoinRequest returns cha
+	// ChatJoinRequest returns the chat join request.
 	ChatJoinRequest() *ChatJoinRequest
 
 	// Migration returns both migration from and to chat IDs.
 	Migration() (int64, int64)
+
+	// Topic returns the topic changes.
+	Topic() *Topic
 
 	// Sender returns the current recipient, depending on the context type.
 	// Returns nil if user is not presented.
@@ -69,6 +72,10 @@ type Context interface {
 	// Text returns the message text, depending on the context type.
 	// In the case when no related data presented, returns an empty string.
 	Text() string
+
+	// Entities returns the message entities, whether it's media caption's or the text's.
+	// In the case when no entities presented, returns a nil.
+	Entities() Entities
 
 	// Data returns the current data, depending on the context type.
 	// If the context contains command, returns its arguments string.
@@ -236,6 +243,22 @@ func (c *nativeContext) Migration() (int64, int64) {
 	return c.u.Message.MigrateFrom, c.u.Message.MigrateTo
 }
 
+func (c *nativeContext) Topic() *Topic {
+	m := c.u.Message
+	if m == nil {
+		return nil
+	}
+	switch {
+	case m.TopicCreated != nil:
+		return m.TopicCreated
+	case m.TopicReopened != nil:
+		return m.TopicReopened
+	case m.TopicEdited != nil:
+		return m.TopicEdited
+	}
+	return nil
+}
+
 func (c *nativeContext) Sender() *User {
 	switch {
 	case c.u.Callback != nil:
@@ -295,6 +318,17 @@ func (c *nativeContext) Text() string {
 		return m.Caption
 	}
 	return m.Text
+}
+
+func (c *nativeContext) Entities() Entities {
+	m := c.Message()
+	if m == nil {
+		return nil
+	}
+	if len(m.CaptionEntities) > 0 {
+		return m.CaptionEntities
+	}
+	return m.Entities
 }
 
 func (c *nativeContext) Data() string {

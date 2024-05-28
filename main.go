@@ -13,7 +13,7 @@ import (
 	"github.com/sorokinmax/smpp/pdu"
 )
 
-const version = "v1.6.0"
+const version = "v1.7.0"
 
 /*
 type AppRegistry struct {
@@ -42,6 +42,8 @@ func init() {
 	defer f.Close()
 	multi := io.MultiWriter(os.Stdout, f)
 	log.SetOutput(multi)
+
+	Messages = make(map[byte]map[byte]Message)
 }
 
 func main() {
@@ -110,29 +112,29 @@ func main() {
 					log.Printf("Invalid PDU in context error: %+v", err)
 				}
 
-				message := sm.ShortMessage
+				message := GetMessage(sm.ShortMessage)
 				switch sm.DataCoding {
 				case 8:
 					message = UCS2Decode(message)
 				}
 
-				log.Printf("Incoming SMS\n\tFrom: %s\n\tTo:%s\n\tPriority: %s\n\tRemoteAddress: %s\n\tSMS: %s", sm.SourceAddr, sm.DestinationAddr, strconv.Itoa(sm.PriorityFlag), ctx.RemoteAddr(), UCS2Decode(sm.ShortMessage))
+				if len(message) > 0 {
+					log.Printf("Incoming SMS\n\tFrom: %s\n\tTo:%s\n\tPriority: %s\n\tRemoteAddress: %s\n\tSMS: %s", sm.SourceAddr, sm.DestinationAddr, strconv.Itoa(sm.PriorityFlag), ctx.RemoteAddr(), message)
+					if len(cache.Mapping[sm.DestinationAddr]) > 0 {
+						log.Printf("Send SMS to: %s", cache.Mapping[sm.DestinationAddr])
 
-				if len(cache.Mapping[sm.DestinationAddr]) > 0 {
-					log.Printf("Send SMS to: %s", cache.Mapping[sm.DestinationAddr])
-
-					// Check dst type
-					_, err := mail.ParseAddress(cache.Mapping[sm.DestinationAddr])
-					if err == nil {
-						response, status = SendEmail(sm, ctx, message)
+						// Check dst type
+						_, err := mail.ParseAddress(cache.Mapping[sm.DestinationAddr])
+						if err == nil {
+							response, status = SendEmail(sm, ctx, message)
+						} else {
+							response, status = SendTelegram(sm, ctx, message)
+						}
 					} else {
-						response, status = SendTelegram(sm, ctx, message)
+						log.Printf("msgID %d: address not matched.", msgID)
+						response = fmt.Sprintf("msgID_%d: address not matched.", msgID)
+						status = pdu.StatusDeliveryFailure
 					}
-
-				} else {
-					log.Printf("msgID %d: address not matched.", msgID)
-					response = fmt.Sprintf("msgID_%d: address not matched.", msgID)
-					status = pdu.StatusDeliveryFailure
 				}
 
 				resp := sm.Response(response)
