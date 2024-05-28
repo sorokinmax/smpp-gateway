@@ -1,2 +1,2 @@
-12223334455=subscriber1@example.com
-67778889900=111111111
+12223334455=%email%
+67778889900=%telegram_user_id%

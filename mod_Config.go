@@ -10,8 +10,10 @@ import (
 // Config struct
 type Config struct {
 	SMPP struct {
-		Host string `yaml:"host"`
-		Port int    `yaml:"port"`
+		Host     string `yaml:"host"`
+		Port     int    `yaml:"port"`
+		User     string `yaml:"user"`
+		Password string `yaml:"password"`
 	} `yaml:"smpp"`
 
 	SMTP struct {

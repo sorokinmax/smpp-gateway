@@ -1,6 +1,8 @@
 smpp:
   host: "192.168.255.251" # leave "" for 0.0.0.0
   port: 2775
+  user: "smppclient" # leave "" for anonymous
+  password: "password"
 
 smtp:
   host: "smtp.office365.com"

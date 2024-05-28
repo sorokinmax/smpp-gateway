@@ -1,13 +1,15 @@
-# github.com/ajankovic/smpp v0.0.0-20191203230920-1db50388714e
-## explicit; go 1.13
-github.com/ajankovic/smpp
-github.com/ajankovic/smpp/pdu
-github.com/ajankovic/smpp/time
+# github.com/sorokinmax/smpp v0.0.0-20240528064258-4cf11e66208d
+## explicit; go 1.21
+github.com/sorokinmax/smpp
+github.com/sorokinmax/smpp/pdu
+github.com/sorokinmax/smpp/time
+# github.com/stretchr/testify v1.9.0
+## explicit; go 1.17
 # github.com/xhit/go-simple-mail v2.2.2+incompatible
 ## explicit
 github.com/xhit/go-simple-mail
-# golang.org/x/text v0.4.0
-## explicit; go 1.17
+# golang.org/x/text v0.15.0
+## explicit; go 1.18
 golang.org/x/text/encoding
 golang.org/x/text/encoding/internal
 golang.org/x/text/encoding/internal/identifier

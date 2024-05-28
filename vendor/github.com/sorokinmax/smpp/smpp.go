@@ -1,49 +1,49 @@
 // Package smpp implements SMPP protocol v3.4.
 //
 // It allows easier creation of SMPP clients and servers by providing utilities for PDU and session handling.
-// In order to do any kind of interaction you first need to create an SMPP [Session](https://godoc.org/github.com/ajankovic/smpp#Session). Session is the main carrier of the protocol and enforcer of the specification rules.
+// In order to do any kind of interaction you first need to create an SMPP [Session](https://godoc.org/github.com/sorokinmax/smpp#Session). Session is the main carrier of the protocol and enforcer of the specification rules.
 //
 // Naked session can be created with:
 //
-//     // You must provide already established connection and configuration struct.
-//     sess := smpp.NewSession(conn, conf)
+//	// You must provide already established connection and configuration struct.
+//	sess := smpp.NewSession(conn, conf)
 //
 // But it's much more convenient to use helpers that would do the binding with the remote SMSC and return you session prepared for sending:
 //
-//     // Bind with remote server by providing config structs.
-//     sess, err := smpp.BindTRx(sessConf, bindConf)
+//	// Bind with remote server by providing config structs.
+//	sess, err := smpp.BindTRx(sessConf, bindConf)
 //
 // And once you have the session it can be used for sending PDUs to the binded peer.
 //
-//     sm := smpp.SubmitSm{
-//         SourceAddr:      "11111111",
-//         DestinationAddr: "22222222",
-//         ShortMessage:    "Hello from SMPP!",
-//     }
-//     // Session can then be used for sending PDUs.
-//     resp, err := sess.Send(p)
+//	sm := smpp.SubmitSm{
+//	    SourceAddr:      "11111111",
+//	    DestinationAddr: "22222222",
+//	    ShortMessage:    "Hello from SMPP!",
+//	}
+//	// Session can then be used for sending PDUs.
+//	resp, err := sess.Send(p)
 //
 // Session that is no longer used must be closed:
 //
-//     sess.Close()
+//	sess.Close()
 //
 // If you want to handle incoming requests to the session specify SMPPHandler in session configuration when creating new session similarly to HTTPHandler from _net/http_ package:
 //
-//     conf := smpp.SessionConf{
-//         Handler: smpp.HandlerFunc(func(ctx *smpp.Context) {
-//             switch ctx.CommandID() {
-//             case pdu.UnbindID:
-//                 ubd, err := ctx.Unbind()
-//                 if err != nil {
-//                     t.Errorf(err.Error())
-//                 }
-//                 resp := ubd.Response()
-//                 if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
-//                     t.Errorf(err.Error())
-//                 }
-//             }
-//         }),
-//     }
+//	conf := smpp.SessionConf{
+//	    Handler: smpp.HandlerFunc(func(ctx *smpp.Context) {
+//	        switch ctx.CommandID() {
+//	        case pdu.UnbindID:
+//	            ubd, err := ctx.Unbind()
+//	            if err != nil {
+//	                t.Errorf(err.Error())
+//	            }
+//	            resp := ubd.Response()
+//	            if err := ctx.Respond(resp, pdu.StatusOK); err != nil {
+//	                t.Errorf(err.Error())
+//	            }
+//	        }
+//	    }),
+//	}
 //
 // Detailed examples for SMPP client and server can be found in the examples dir.
 package smpp
@@ -53,7 +53,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/ajankovic/smpp/pdu"
+	"github.com/sorokinmax/smpp/pdu"
 )
 
 const (
