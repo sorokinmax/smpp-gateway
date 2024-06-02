@@ -13,7 +13,7 @@ import (
 	"github.com/sorokinmax/smpp/pdu"
 )
 
-const version = "v1.7.1"
+const version = "v1.7.2"
 
 /*
 type AppRegistry struct {
@@ -118,7 +118,7 @@ func main() {
 				}
 
 				if len(message) > 0 {
-					log.Printf("Incoming SMS\n\tFrom: %s\n\tTo:%s\n\tPriority: %s\n\tRemoteAddress: %s\n\tSMS: %s", sm.SourceAddr, sm.DestinationAddr, strconv.Itoa(sm.PriorityFlag), ctx.RemoteAddr(), message)
+					log.Printf("Incoming SMS\n\tSessionId: %s\n\tFrom: %s\n\tTo:%s\n\tPriority: %s\n\tRemoteAddress: %s\n\tSMS: %s", ctx.SessionID(), sm.SourceAddr, sm.DestinationAddr, strconv.Itoa(sm.PriorityFlag), ctx.RemoteAddr(), message)
 					if len(cache.Mapping[sm.DestinationAddr]) > 0 {
 						log.Printf("Send SMS to: %s", cache.Mapping[sm.DestinationAddr])
 
