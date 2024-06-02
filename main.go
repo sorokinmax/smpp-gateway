@@ -13,7 +13,7 @@ import (
 	"github.com/sorokinmax/smpp/pdu"
 )
 
-const version = "v1.7.0"
+const version = "v1.7.1"
 
 /*
 type AppRegistry struct {
@@ -33,7 +33,10 @@ var cfg Config
 
 func init() {
 	readConfigFile(&cfg)
+	Messages = make(map[byte]map[byte]Message)
+}
 
+func main() {
 	log.SetFlags(log.LstdFlags)
 	f, err := os.OpenFile("smpp-gateway.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -43,10 +46,6 @@ func init() {
 	multi := io.MultiWriter(os.Stdout, f)
 	log.SetOutput(multi)
 
-	Messages = make(map[byte]map[byte]Message)
-}
-
-func main() {
 	//appData = make(map[string]AppRegistry)
 
 	serverHost := cfg.SMPP.Host + ":" + strconv.Itoa(cfg.SMPP.Port)
@@ -171,7 +170,7 @@ func main() {
 	srv := smpp.NewServer(serverAddr, sessConf)
 
 	log.Printf("'%s' is listening on '%s'", systemID, serverAddr)
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	if err != nil {
 		log.Printf("Serving exited with error: %+v", err)
 	}
