@@ -21,9 +21,11 @@ Based on [Modified  SMPP 3.4 Library](https://github.com/sorokinmax/smpp)
 - PDU commands: **bind_transceiver, bind_transmitter, submit_sm, enquire_link, unbind**
 - Encodings: **UCS-2**
 - Long messages: User data headers(UDH) method only.
+
 **SMTP**
 - Authentication methods: **PLAIN,  LOGIN, CRAM-MD5**
 - Encryption methods: **None,  SSL/TLS, STARTTLS**
+
 **Telegram**
   - Sending SMS via your bot 
 
