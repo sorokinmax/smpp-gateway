@@ -3,11 +3,11 @@
 
 ## Description
 
-SMPP clients testing tool.
+SMPP-clients testing tool.
 
 Runs SMPP server, forwards incoming SMS with some debug information to SMTP or Telegram.
 
-Incoming SMS are redirected to emails or Telegram, mapped with phone numbers in mapping.txt
+Incoming SMS are redirected to e-mail or Telegram, and are matched with recipients in mapping.txt
 
 Based on [Modified  SMPP 3.4 Library](https://github.com/sorokinmax/smpp)
 
@@ -16,11 +16,16 @@ Based on [Modified  SMPP 3.4 Library](https://github.com/sorokinmax/smpp)
 - Receiving SMS and forwarding them to an SMTP server or Telegram for testing client applications using SMPP in simple scenarios.
 
 ## Features
-- SMPP supports protocol version: **3.4**
-- SMPP supports PDU commands: **bind_transceiver, submit_sm, unbind**
-- SMPP supports encodings: **UCS-2**
-- SMTP supports authentication methods: **PLAIN,  LOGIN, CRAM-MD5**
-- SMTP supports encryption methods: **None,  SSL/TLS, STARTTLS**
+**SMPP**
+- Protocol version: **3.4**
+- PDU commands: **bind_transceiver, bind_transmitter, submit_sm, enquire_link, unbind**
+- Encodings: **UCS-2**
+- Long messages: User data headers(UDH) method only.
+**SMTP**
+- Authentication methods: **PLAIN,  LOGIN, CRAM-MD5**
+- Encryption methods: **None,  SSL/TLS, STARTTLS**
+**Telegram**
+  - Sending SMS via your bot 
 
 ## SMPP docs
 [Short Message Peer to Peer
